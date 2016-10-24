@@ -72,7 +72,7 @@ public class Demo2110 {
                     }
                 }
 
-                bldLayoutArr = shadowMatching.getBldLayout(bldModels, coordinateTrans.flatToLla(locOut,llo,0,Math.PI/2), 100);
+                bldLayoutArr = shadowMatching.getBldLayout(bldModels, llo, coordinateTrans.flatToLla(locOut,llo,0,Math.PI/2), 100);
 
                 double sumStatesPre = 0;
                 for (double[] statePre : statesPre) {
@@ -102,7 +102,7 @@ public class Demo2110 {
 
             } else {
 
-                bldLayoutArr = shadowMatching.getBldLayout(bldModels, llo, 100);
+                bldLayoutArr = shadowMatching.getBldLayout(bldModels, llo, llo, 100);
 
                 for (double m = -gridRadius; m <= gridRadius; m += gridStep) {
                     for (double n = -gridRadius; n <= gridRadius; n += gridStep) {
