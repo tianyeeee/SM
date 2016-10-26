@@ -8,7 +8,7 @@ import java.util.ArrayList;
 /**
  * Created by ye.sensewhere on 2016/10/25.
  */
-public class Demo2510New3 {
+public class Demo2510New4 {
 
     private static final double betaDis = 0.1;
     private static final double betaSma = 0.2;
@@ -23,13 +23,13 @@ public class Demo2510New3 {
         CoordinateTrans coordinateTrans = new CoordinateTrans();
         ShadowMatching shadowMatching = new ShadowMatching();
 
-        String llaCsvPath = "C:/Users/ye.sensewhere/Documents/new project on shadowing/week39/dataset/kdm4.lla.csv";
+        String llaCsvPath = "C:/Users/ye.sensewhere/Documents/new project on shadowing/week39/dataset/kdm6.lla.csv";
         ArrayList<double[]> llaArrayList = fileIO.llaLoader(llaCsvPath, ",");
 
-        String satPath = "C:/Users/ye.sensewhere/Documents/new project on shadowing/week39/dataset/kdm4.sat";
+        String satPath = "C:/Users/ye.sensewhere/Documents/new project on shadowing/week39/dataset/kdm6.sat";
         ArrayList<ArrayList<double[]>> satArrList = fileIO.satelliteLoader(satPath, ",");
 
-        String sensorsPath = "C:/Users/ye.sensewhere/Documents/new project on shadowing/week39/dataset/kdm4.sen";
+        String sensorsPath = "C:/Users/ye.sensewhere/Documents/new project on shadowing/week39/dataset/kdm6.sen";
         ArrayList<double[]> sensorsArrList = fileIO.sensorsLoader(sensorsPath, ",");
 
         String bld2Dpath = "C:/Users/ye.sensewhere/Documents/new project on shadowing/week39/map/building_wangjing.MIF.out";
@@ -49,7 +49,7 @@ public class Demo2510New3 {
         ArrayList<double[]> statesPre;
         ArrayList<double[]> llaOutArr = new ArrayList<>();
 
-        for (int t = 0, len = 10; t < len; t++) {
+        for (int t = 0, len = 9; t < len; t++) {
 
             double[] lla = llaArrayList.get(t);
             double sigma = llaArrayList.get(t)[2] * 10;
@@ -60,8 +60,9 @@ public class Demo2510New3 {
             double[] locGps = coordinateTrans.llaToFlat(lla,llo,0,Math.PI/2);
 
 //            double gridRadius = llaArrayList.get(t)[2] * 10;
-            double gridRadius = 30;
+            double gridRadius = 60;
             int gridStep = 2;
+            int baseSplit = 6;
 
 //            ArrayList<ArrayList<double[][]>> bldLayoutArr = shadowMatching.getBldLayout(bldModels, llo, llo, 200);
             ArrayList<ArrayList<double[][]>> bldLayoutArr = new ArrayList<>();
@@ -74,10 +75,11 @@ public class Demo2510New3 {
                 statesPre = new ArrayList<>();
                 gridShiftX = Math.round(locOut[0]/gridStep) * gridStep;
                 gridShiftY = Math.round(locOut[1]/gridStep) * gridStep;
-                for (double m = -gridRadius; m <= gridRadius; m += gridStep) {
-                    for (double n = -gridRadius; n <= gridRadius; n += gridStep) {
-                        double[] statePre = new double[]{locInitial[0] + gridShiftX + m, locInitial[1] + gridShiftY + n, 1, 1, 0, 0};
-                        if (MyMath.arrNorm(MyMath.arrSub(new double[]{statePre[0],statePre[1],0}, new double[]{locInitial[0] + gridShiftX, locInitial[1] + gridShiftY, 0})) <= gridRadius) statesPre.add(statePre);
+
+                for (int i = 0; i < gridRadius/gridStep; i++) {
+                    for (int j = 0; j < i * baseSplit; j++) {
+                        double[] statePre = new double[]{locInitial[0] + gridShiftX + gridStep * i * Math.cos(j*2*Math.PI/baseSplit/i), locInitial[1] + gridShiftY + gridStep * i * Math.sin(j*2*Math.PI/baseSplit/i), 1, 1, 0, 0};
+                        statesPre.add(statePre);
                     }
                 }
 
@@ -113,10 +115,10 @@ public class Demo2510New3 {
 
             } else {
 
-                for (double m = -gridRadius; m <= gridRadius; m += gridStep) {
-                    for (double n = -gridRadius; n <= gridRadius; n += gridStep) {
-                        double[] state = new double[]{locGps[0] + m, locGps[1] + n, 1, 1, 0, 0};
-                        if (MyMath.arrNorm(MyMath.arrSub(new double[]{state[0],state[1],0}, locGps)) <= gridRadius) states.add(state);
+                for (int i = 0; i < gridRadius/gridStep; i++) {
+                    for (int j = 0; j < i * baseSplit; j++) {
+                        double[] state = new double[]{locGps[0] + gridStep * i * Math.cos(j*2*Math.PI/baseSplit/i), locGps[1] + gridStep * i * Math.sin(j*2*Math.PI/baseSplit/i), 1, 1, 0, 0};
+                        states.add(state);
                     }
                 }
 
@@ -173,7 +175,7 @@ public class Demo2510New3 {
 
             BufferedWriter br = null;
             try {
-                br = new BufferedWriter(new FileWriter("C:/Users/ye.sensewhere/Documents/new project on shadowing/D10192016/data/java/states_kdm4.csv", true));
+                br = new BufferedWriter(new FileWriter("C:/Users/ye.sensewhere/Documents/new project on shadowing/D10192016/data/java/states_t25.csv", true));
                 StringBuilder sb = new StringBuilder();
                 for (double[] state : states) {
                     for (double item : state) {
@@ -195,7 +197,7 @@ public class Demo2510New3 {
 
         BufferedWriter br = null;
         try {
-            br = new BufferedWriter(new FileWriter("C:/Users/ye.sensewhere/Documents/new project on shadowing/D10192016/data/java/lla_out_kdm4.csv"));
+            br = new BufferedWriter(new FileWriter("C:/Users/ye.sensewhere/Documents/new project on shadowing/D10192016/data/java/lla_out_t25.csv"));
             StringBuilder sb = new StringBuilder();
             for (double[] lla : llaOutArr) {
                 for (double item : lla) {
