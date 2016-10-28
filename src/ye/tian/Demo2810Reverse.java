@@ -4,12 +4,11 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
- * Created by ye.sensewhere on 2016/10/27.
+ * Created by ye.sensewhere on 2016/10/28.
  */
-public class Demo2710 {
+public class Demo2810Reverse {
 
     private static final double betaDis = 0.1;
     private static final double betaSma = 0.2;
@@ -41,7 +40,7 @@ public class Demo2710 {
 
         boolean outDoor = false;
 //        double[] llo = new double[]{39.9931,116.4684,0};
-        double[] llo = llaArrayList.get(0);
+        double[] llo = llaArrayList.get(llaArrayList.size()-1);
         double[] locOut = new double[]{0, 0, 0};
         double[] locInitial = new double[]{0, 0, 0};
         long gridShiftX, gridShiftY;
@@ -51,7 +50,7 @@ public class Demo2710 {
         ArrayList<double[]> statesPre;
         ArrayList<double[]> llaOutArr = new ArrayList<>();
 
-        for (int t = 0, len = llaArrayList.size(); t < len; t++) {
+        for (int t = llaArrayList.size()-1; t >= 0; t--) {
 
             double[] lla = llaArrayList.get(t);
             double sigma = llaArrayList.get(t)[2] * 10;
@@ -70,16 +69,16 @@ public class Demo2710 {
             double[] locGps = coordinateTrans.llaToFlat(lla, llo, 0, Math.PI / 2);
 
 //            double gridRadius = llaArrayList.get(t)[2] * 10;
-            double gridRadius = 30;
+            double gridRadius = Math.max(llaArrayList.get(t)[2] * 5, 60);
             int gridStep = 2;
 
 //            ArrayList<ArrayList<double[][]>> bldLayoutArr = shadowMatching.getBldLayout(bldModels, llo, llo, 200);
             ArrayList<ArrayList<double[][]>> bldLayoutArr = new ArrayList<>();
 
-            if (t > 0) {
+            if (t < llaArrayList.size()-1) {
 
-                double distPdr = 0.1 * (sensorsArrList.get(t)[2] - sensorsArrList.get(t-1)[2]);
-                double[] headingPdr = new double[]{Math.sin(sensorsArrList.get(t)[1]), -Math.cos(sensorsArrList.get(t)[1]), 0};
+                double distPdr = 0.1 * (sensorsArrList.get(t+1)[2] - sensorsArrList.get(t)[2]);
+                double[] headingPdr = new double[]{Math.sin(sensorsArrList.get(t)[1] + Math.PI), -Math.cos(sensorsArrList.get(t)[1] + Math.PI), 0};
 
                 statesPre = new ArrayList<>();
                 gridShiftX = Math.round(locOut[0] / gridStep) * gridStep;
@@ -185,7 +184,7 @@ public class Demo2710 {
 
             BufferedWriter br;
             try {
-                br = new BufferedWriter(new FileWriter("C:/Users/ye.sensewhere/Documents/new project on shadowing/D10192016/data/java/states_kdm6.csv", true));
+                br = new BufferedWriter(new FileWriter("C:/Users/ye.sensewhere/Documents/new project on shadowing/D10192016/data/java/states_kdm6_2.csv", true));
                 StringBuilder sb = new StringBuilder();
                 for (double[] state : states) {
                     for (double item : state) {
@@ -207,7 +206,7 @@ public class Demo2710 {
 
         BufferedWriter br;
         try {
-            br = new BufferedWriter(new FileWriter("C:/Users/ye.sensewhere/Documents/new project on shadowing/D10192016/data/java/lla_out_kdm6.csv", true));
+            br = new BufferedWriter(new FileWriter("C:/Users/ye.sensewhere/Documents/new project on shadowing/D10192016/data/java/lla_out_kdm6_2.csv", true));
             StringBuilder sb = new StringBuilder();
             for (double[] lla : llaOutArr) {
                 for (double item : lla) {

@@ -4,12 +4,11 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
- * Created by ye.sensewhere on 2016/10/27.
+ * Created by ye.sensewhere on 2016/10/28.
  */
-public class Demo2710 {
+public class Demo2810 {
 
     private static final double betaDis = 0.1;
     private static final double betaSma = 0.2;
@@ -70,7 +69,7 @@ public class Demo2710 {
             double[] locGps = coordinateTrans.llaToFlat(lla, llo, 0, Math.PI / 2);
 
 //            double gridRadius = llaArrayList.get(t)[2] * 10;
-            double gridRadius = 30;
+            double gridRadius = Math.max(llaArrayList.get(t)[2] * 5, 60);
             int gridStep = 2;
 
 //            ArrayList<ArrayList<double[][]>> bldLayoutArr = shadowMatching.getBldLayout(bldModels, llo, llo, 200);
@@ -185,7 +184,7 @@ public class Demo2710 {
 
             BufferedWriter br;
             try {
-                br = new BufferedWriter(new FileWriter("C:/Users/ye.sensewhere/Documents/new project on shadowing/D10192016/data/java/states_kdm6.csv", true));
+                br = new BufferedWriter(new FileWriter("C:/Users/ye.sensewhere/Documents/new project on shadowing/D10192016/data/java/states_kdm6_1.csv", true));
                 StringBuilder sb = new StringBuilder();
                 for (double[] state : states) {
                     for (double item : state) {
@@ -207,7 +206,7 @@ public class Demo2710 {
 
         BufferedWriter br;
         try {
-            br = new BufferedWriter(new FileWriter("C:/Users/ye.sensewhere/Documents/new project on shadowing/D10192016/data/java/lla_out_kdm6.csv", true));
+            br = new BufferedWriter(new FileWriter("C:/Users/ye.sensewhere/Documents/new project on shadowing/D10192016/data/java/lla_out_kdm6_1.csv", true));
             StringBuilder sb = new StringBuilder();
             for (double[] lla : llaOutArr) {
                 for (double item : lla) {
